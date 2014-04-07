@@ -1,0 +1,28 @@
+Installation instructions
+==========================
+
+1. Required software:
+
+JOSM revision 6950 (http://josm.openstreetmap.de)
+RoboCup Rescue Simulation Software (http://sourceforge.net/projects/roborescue)
+Java1.7 JDK 
+Ant
+
+2. Building
+
+Edit the build.properties file as follows:
+  josm=<Path to JOSM-Jarfile>
+  roborescue.dir=<Path to the roborescue root directory>
+
+Run ant.
+
+This will compile the plug-in and create the file dist/rcr-converter.jar
+
+3. Installation
+
+Copy jscience.jar and rcr-converter.jar into the JOSM-plug-in directory
+(~/.josm/plugins/ on linux).
+
+Start JOSM, go to settings -> plugins and enable the RCR-converter plugin.
+After a restart of JOSM, everything should work.
+

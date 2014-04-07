@@ -1,0 +1,45 @@
+<project name="rcr-converter" default="dist" basedir=".">
+<!-- compilation properties -->
+	<property file="build.properties" />
+
+    <property name="josm.home.dir"  location="${user.home}/.josm"/>
+	
+    <property name="plugin.build.dir" value="build"/>
+    <property name="plugin.dist.dir"  value="dist"/>
+    <property name="plugin.name"      value="${ant.project.name}"/>
+    <property name="plugin.jar"       value="dist/${plugin.name}.jar"/>
+    <property name="roborescue.deps"  value="${roborescue.dir}/jars/maps.jar:${roborescue.dir}/jars/rescuecore2.jar:${roborescue.dir}/lib/dom4j.jar"/>
+	<property name="classpath" 		  value="${josm}:${roborescue.deps}" />
+    <property name="ant.build.javac.target" value="1.7"/>
+	
+    <target name="init">
+        <mkdir dir="build"></mkdir>
+        <mkdir dir="dist"></mkdir>
+    </target>
+    <target name="compile" depends="init">
+        <echo message="creating ${plugin.jar}"/>
+        <javac includeantruntime="false" srcdir="src" classpath="${java.class.path}:${classpath}" debug="true" destdir="build">
+            <include name="**/*.java" />
+        </javac>
+    </target>
+    <target name="dist" depends="compile">
+        <copy todir="build/images" >
+            <fileset dir="images" />
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="build">
+        	<zipgroupfileset dir="${roborescue.dir}" includes="lib/dom4j.jar, jars/maps.jar, jars/rescuecore2.jar" /> 
+            <manifest>
+                <attribute name="Plugin-Class" value="rcr.RCRPlugin" />
+                <attribute name="Plugin-Description" value="Convert OSM maps to RCR-Simulation maps" />
+                <attribute name="Plugin-Version" value="2.0.0" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="clean">
+        <delete dir="${plugin.build.dir}" />
+        <delete file="${plugin.jar}" />
+    </target>
+    <target name="install" depends="dist">
+        <copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
+    </target>
+</project>
