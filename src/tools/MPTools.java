@@ -248,7 +248,7 @@ public class MPTools {
 		for (Way w : result) {
 			if (!outer.contains(w)) {
 				//FIXME: add tags to unchanged outer rings
-//				w.setKeys(combinedTags);
+				w.setKeys(combinedTags);
 			}
 		}
 		return result;		
