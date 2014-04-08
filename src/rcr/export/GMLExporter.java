@@ -443,19 +443,6 @@ public class GMLExporter {
 		}
 	}
 	
-	private static boolean isShapeWay(OsmPrimitive w) {
-		if (!(w instanceof Way) || !((Way) w).isArea()) {
-			return false;
-		}
-		if (w.hasTag("rcr:type", "building")) {
-			return true;
-		}
-		if (w.hasAreaTags() && w.hasTag("rcr:type", "road")) {
-			return true;
-		}
-		return false;
-	}
-
 
 	private void createAreaRoadGeometry(Way w) {
 		System.out.println("Processing area road " + w.getId());
@@ -671,37 +658,6 @@ public class GMLExporter {
 			return angle;
 		}
 
-	}
-
-	private List<RCRRoad> sortedSegments(Node center,
-			Collection<RCRRoad> roads, Collection<Node> wallNodes) {
-		List<Edge> edges = new ArrayList<>();
-		edges.addAll(roads);
-		for (Node n : wallNodes) {
-			edges.add(new OutlineSegment(center, n, null));
-		}
-		Collections.sort(edges, new LineAngleComperator(center));
-		List<RCRRoad> result = new ArrayList<>();
-
-		// Find roads between two walls in clockwise order
-		// Iterate twice, start adding roads to result once we encountered (at
-		// least)
-		// one wall. Stop once we encounter a second wall (after adding roads)
-		edges.addAll(new ArrayList<>(edges));
-		boolean foundWall = false;
-		boolean foundRoad = false;
-		for (Edge e : edges) {
-			if (e instanceof OutlineSegment) {
-				foundWall = true;
-				if (foundRoad) {
-					break;
-				}
-			} else if (e instanceof RCRRoad && foundWall) {
-				result.add((RCRRoad) e);
-				foundRoad = true;
-			}
-		}
-		return result;
 	}
 	
 	
