@@ -356,6 +356,7 @@ public class MPTools {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private static List<Way> segmentMPRecursive(List<Way> outer, List<Way> inner) {
 		if (inner.isEmpty()) {
 			return outer;
@@ -609,6 +610,7 @@ public class MPTools {
 	 * @param clockwise
 	 * @return List of SplitEntries
 	 */
+	@SuppressWarnings("unused")
 	static List<WaySegment> splitWay(Way w, Line2D line, boolean clockwise) {
 		if (DEBUG && w.isKeyTrue("rcr:debug")) {
 			return Collections.emptyList();

@@ -3,7 +3,6 @@ package rcr.export;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,7 +11,6 @@ import java.util.Set;
 
 import maps.gml.GMLBuilding;
 import maps.gml.GMLDirectedEdge;
-import maps.gml.GMLEdge;
 import maps.gml.GMLNode;
 import maps.gml.GMLRoad;
 import maps.gml.GMLShape;
@@ -93,7 +91,6 @@ class RCRShape {
 		for (GMLDirectedEdge e : shape.getEdges()) {
 			Point2D p1 = new Point2D.Double(e.getStartNode().getX(), e.getStartNode().getY());
 			Point2D p2 = new Point2D.Double(e.getEndNode().getX(), e.getEndNode().getY());
-			Line2D l = new Line2D.Double(p1, p2);
 			if (Vector.pointOnLine(p, p1, p2)) {
 				return e;
 			}

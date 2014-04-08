@@ -78,7 +78,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 import org.openstreetmap.josm.Main;

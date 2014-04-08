@@ -67,19 +67,16 @@ public class RCRMapLayer extends OsmDataLayer {
 			.createImage(RCRPlugin.class.getResource("/images/rescue.png")));
 
 
-	private DataSet sourceData;
 	private boolean showErrors = false;
 
-	public RCRMapLayer(RCRDataSet _rcrData, DataSet source) {
+	public RCRMapLayer(RCRDataSet _rcrData) {
 		super(_rcrData.getData(), "Rescue Map", null);
 		rcrData = _rcrData;
-		sourceData = source;
 	}
 
 	public RCRMapLayer(RCRDataSet data, String name, File file) {
 		super(data.getData(), name, file);
 		rcrData = data;
-		sourceData = null;
 	}
 	
 	public void setShowErrors(boolean showErrors) {
@@ -95,12 +92,12 @@ public class RCRMapLayer extends OsmDataLayer {
     }
     
     public static RCRMapLayer fromOsmData(DataSet data) {
-		return new RCRMapLayer(extractRescueData(data), data);
+		return new RCRMapLayer(extractRescueData(data));
 
     }
 
     public static RCRMapLayer fromRCRMap(RCRLegacyMap fromMap) {
-		return new RCRMapLayer(new RCRDataSet(fromMap), null);
+		return new RCRMapLayer(new RCRDataSet(fromMap));
     }
     
 	private static RCRDataSet extractRescueData(DataSet data) {

@@ -36,7 +36,6 @@ import org.openstreetmap.josm.tools.Pair;
 import rcr.Constants;
 import rcr.RCRDataSet;
 import rcr.Vector;
-import rescuecore2.log.Logger;
 
 public class GMLExporter {
 
