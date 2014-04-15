@@ -116,13 +116,10 @@ public class LegacyImporter {
 			}
 		}
 		
-		LatLon c = rcrdata.rcr2osmCoord(b.getX(), b.getY());
-		Node bNode = new Node(c);
-		bNode.setOsmId(b.getID(), 1);
-		bNode.put("rcr:id", Integer.toString(b.getID()));
-		bNode.put("rcr:type", "building");
-		bNode.put("rcr:building_code", Integer.toString(b.getBuildingCode()));
-		bNode.put("rcr:floors", Integer.toString(b.getFloors()));
+		outline.put("rcr:id", Integer.toString(b.getID()));
+		outline.put("rcr:type", "building");
+		outline.put("rcr:building_code", Integer.toString(b.getBuildingCode()));
+		outline.put("rcr:floors", Integer.toString(b.getFloors()));
 		if (b.getImportance() > 1)
 			outline.put("rcr:importance", Integer.toString(b.getImportance()));
 		
@@ -137,25 +134,7 @@ public class LegacyImporter {
 		
 		if (b.isIgnited()) {
 			outline.put("rcr:fire","true");
-		}
-			
-		rcrdata.addPrimitive(bNode);
-		idToObject.put((long) b.getID(), bNode);
-
-//		Relation rel = new Relation();
-//		rel.put("rcr:type", "building");
-//		rel.addMember(new RelationMember("rcr:outline", outline));
-//		rel.addMember(new RelationMember("rcr:node", bNode));
-//		for (int id : b.getEntrances()) {
-//			//bNode.put("rcr:entrances", Integer.toString(id));
-//			Node n = (Node) idToObject.get((long) id);
-//			//if (n == null)
-//			//	continue;
-//			rel.addMember(new RelationMember("rcr:entrance", n));
-//		}
-//		rcrdata.addPrimitive(rel);
-		
-		//outlineMap.put(outline.id, outline);
+		}			
 	}
 
 	private void rcr2osmQuakePolygon(GalPolygon poly) {
