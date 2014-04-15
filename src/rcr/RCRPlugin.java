@@ -143,7 +143,7 @@ public class RCRPlugin extends Plugin {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			RCRPlugin.settings.setVisible(true);
+			RCRPlugin.settings.loadAndShow();
 		}
 	}
 	

@@ -31,10 +31,7 @@ import tools.AreaTools;
 
 public class EntranceGenerator {
 
-	static double ENTRANCE_WIDTH = Constants.DEFAULT_ENTRANCE_WIDTH/1000.0;
 	static double MIN_ENTRANCE_WALL_LENGTH = 2.0;
-	static double MIN_ENTRANCE_LENGTH = 0.5;
-	static double MAX_ENTRANCE_LENGTH = 50.0;
 	
 	static double DEVIATION_THRESHOLD = 0.5;
 	
@@ -104,10 +101,10 @@ public class EntranceGenerator {
 				return node;
 			}
 			Pair<Node, Node> segment = getSegment();
-			if (node2Point(segment.a).distance(point) < ENTRANCE_WIDTH/2 ) {
+			if (node2Point(segment.a).distance(point) < getEntranceWidth()/2 ) {
 				return segment.a;
 			}
-			if (node2Point(segment.b).distance(point) < ENTRANCE_WIDTH/2 ) {
+			if (node2Point(segment.b).distance(point) < getEntranceWidth()/2 ) {
 				return segment.b;
 			}
 			return null;
@@ -351,7 +348,7 @@ public class EntranceGenerator {
 		entrance.addNode(n2);
 		entrance.put("rcr:type", "road");
 		entrance.put("rcr:entrance", "yes");
-		entrance.put("rcr:width", Integer.toString((int) (ENTRANCE_WIDTH * 1000)));
+		entrance.put("rcr:width", Integer.toString((int) (getEntranceWidth() * 1000)));
 		this.data.addPrimitive(entrance);
 		return entrance;
 	}
@@ -403,7 +400,7 @@ public class EntranceGenerator {
 		entrance.addNode(end);
 		entrance.put("rcr:type", "road");
 		entrance.put("rcr:entrance", "yes");
-		entrance.put("rcr:width", Integer.toString((int) (ENTRANCE_WIDTH * 1000)));
+		entrance.put("rcr:width", Integer.toString((int) (getEntranceWidth() * 1000)));
 
 		//DEBUG
 		Point2D dir = Vector.diff(e.roadEndpoint.point, e.buildingEndpoint.point);
@@ -701,10 +698,13 @@ public class EntranceGenerator {
 	}
 	
 	private List<EntranceCandidate> getEntranceRoads(EntranceCandidate e) {
+		double minLength = RCRPlugin.settings.getMinEntranceLength();
+		double maxLength = RCRPlugin.settings.getMaxEntranceLength();
+		
 		LatLon b1 = Main.getProjection().eastNorth2latlon(
-				new EastNorth(e.buildingEndpoint.getX() - MAX_ENTRANCE_LENGTH, e.buildingEndpoint.getY() - MAX_ENTRANCE_LENGTH));
+				new EastNorth(e.buildingEndpoint.getX() - maxLength, e.buildingEndpoint.getY() - maxLength));
 		LatLon b2 = Main.getProjection().eastNorth2latlon(
-				new EastNorth(e.buildingEndpoint.getX() + MAX_ENTRANCE_LENGTH, e.buildingEndpoint.getY() + MAX_ENTRANCE_LENGTH));
+				new EastNorth(e.buildingEndpoint.getX() + maxLength, e.buildingEndpoint.getY() + maxLength));
 		
 		List<EntranceCandidate> results = new ArrayList<>();
 		BBox bounds = new BBox(b1, b2);
@@ -715,7 +715,7 @@ public class EntranceGenerator {
 				continue;
 			}
 			for (EntranceCandidate e2 : makeEntranceToWay(e, w)) {
-				if (e2.getLength() <= MAX_ENTRANCE_LENGTH && e2.getLength() >= MIN_ENTRANCE_LENGTH ) {
+				if (e2.getLength() <= maxLength && e2.getLength() >= minLength ) {
 					results.add(e2);
 				}
 			}
@@ -724,4 +724,7 @@ public class EntranceGenerator {
 	}
 	
 	
+	private static double getEntranceWidth() {
+		return (double) RCRPlugin.settings.getEntranceWidth() / 1000;
+	}
 }

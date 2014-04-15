@@ -404,7 +404,7 @@ public class RCRDialog extends ToggleDialog implements DataSetListenerAdapter.Li
 		for (Way w : data.getData().getSelectedWays()) {
 			if (w.hasTag("rcr:type", "road") && !w.hasAreaTags()) {
 				double maxWidth = rg.getMaxRoadWidth(w, 0.5);
-				if (maxWidth * 1000 >= Constants.MINIMUM_ROAD_WIDTH) {
+				if (maxWidth * 1000 >=  RCRPlugin.settings.getMinRoadWidth()) {
 					w.put("rcr:width", Integer.toString((int) (maxWidth * 1000)));
 				}
 			}

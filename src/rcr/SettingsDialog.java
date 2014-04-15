@@ -39,13 +39,18 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.josm.Main;
+
 public class SettingsDialog extends JDialog {
+
+	private static String prefix = "rcr-converter.";
 
 	private JTextField civs = new JTextField("80");
 	private JTextField ats = new JTextField("8");
@@ -57,6 +62,12 @@ public class SettingsDialog extends JDialog {
 	private JTextField pos = new JTextField("1");
 	private JTextField fires = new JTextField("6");
 	
+	private JTextField entranceWidth = new JTextField(Integer.toString(Constants.DEFAULT_ENTRANCE_WIDTH));
+	private JTextField minEntranceLength = new JTextField(Integer.toString((int) (1000 * Constants.MIN_ENTRANCE_LENGTH)));
+	private JTextField maxEntranceLength = new JTextField(Integer.toString((int) (1000 * Constants.MAX_ENTRANCE_LENGTH)));
+
+	private JTextField minRoadWidth = new JTextField(Integer.toString(Constants.MINIMUM_ROAD_WIDTH));
+
 	private JTextField minH = new JTextField("1");
 	private JTextField maxH = new JTextField("20");
 
@@ -88,22 +99,45 @@ public class SettingsDialog extends JDialog {
         scenarioSettings.add(new JLabel("fires"));
         scenarioSettings.add(fires);
         
-        JPanel mapSettings = new JPanel(new GridLayout(3, 2));
+        JPanel entranceSettings = new JPanel(new GridLayout(3,2));
+        entranceSettings.setBorder(BorderFactory.createTitledBorder("Entrances"));
+        add(entranceSettings, BorderLayout.NORTH);
+        entranceSettings.add(new JLabel("entrance width"));
+        entranceSettings.add(entranceWidth);
+        entranceSettings.add(new JLabel("min. entrance length"));
+        entranceSettings.add(minEntranceLength);
+        entranceSettings.add(new JLabel("max. entrance length"));
+        entranceSettings.add(maxEntranceLength);
+
+        JPanel mapSettings = new JPanel(new GridLayout(4, 2));
         add(mapSettings, BorderLayout.CENTER);
-        mapSettings.add(new JLabel("min floors"));
+        mapSettings.add(new JLabel("min. road width"));
+        mapSettings.add(minRoadWidth);
+        mapSettings.add(new JLabel("min. floors"));
         mapSettings.add(minH);
-        mapSettings.add(new JLabel("max floors"));
+        mapSettings.add(new JLabel("max. floors"));
         mapSettings.add(maxH);
         mapSettings.add(new JLabel("export scale"));
         mapSettings.add(scale);
 
+        JPanel buttons = new JPanel(new GridLayout(1, 2));
         JButton okBtn = new JButton("Ok");
         okBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				saveSettings();
 				setVisible(false);
 			}
         });
-        add(okBtn, BorderLayout.SOUTH);
+        buttons.add(okBtn);
+        JButton cancelBtn = new JButton("Cancel");
+        cancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loadSettings();
+				setVisible(false);
+			}
+        });
+        buttons.add(cancelBtn);
+        add(buttons, BorderLayout.SOUTH);
         pack();
 	}
 
@@ -114,6 +148,81 @@ public class SettingsDialog extends JDialog {
 		} 
 		catch (NumberFormatException e) {}
 		return res;
+	}
+
+	private void loadSettings() {
+		loadInt("entranceWidth", entranceWidth, Constants.DEFAULT_ENTRANCE_WIDTH);
+		loadDouble("minEntranceLength", minEntranceLength, Constants.MIN_ENTRANCE_LENGTH);
+		loadDouble("maxEntranceLength", maxEntranceLength, Constants.MAX_ENTRANCE_LENGTH);
+
+		loadInt("minRoadWidth", minRoadWidth, Constants.MINIMUM_ROAD_WIDTH);
+		loadInt("minFloors", minH, 1);
+		loadInt("maxFloors", maxH, 20);
+		loadDouble("exportScale", scale, 1.0);
+	}
+
+	private void saveSettings() {
+		trySaveInt("entranceWidth", entranceWidth);
+		trySaveDouble("minEntranceLength", minEntranceLength);
+		trySaveDouble("maxEntranceLength", maxEntranceLength);
+
+		trySaveInt("minRoadWidth", minRoadWidth);
+		trySaveInt("minFloors", minH);
+		trySaveInt("maxFloors", maxH);
+		trySaveDouble("exportScale", scale);
+	}
+
+	private void loadInt(String subkey, JTextField text, int def) {
+		int value = Main.pref.getInteger(prefix+subkey, def);
+		text.setText(Integer.toString(value));
+	}
+
+	private void loadDouble(String subkey, JTextField text, double def) {
+		double value = Main.pref.getDouble(prefix+subkey, def);
+		text.setText(Double.toString(value));
+	}
+
+	private void trySaveInt(String subkey, JTextField text) {
+		try {
+			int value = Integer.parseInt(text.getText());
+			Main.pref.putInteger(prefix+subkey, value);
+		}
+		catch (NumberFormatException e) {
+			// do nothing
+		}
+	}
+
+	private void trySaveDouble(String subkey, JTextField text) {
+		try {
+			double value = Double.parseDouble(text.getText());
+			Main.pref.putDouble(prefix+subkey, value);
+		}
+		catch (NumberFormatException e) {
+			// do nothing
+		}
+	}
+
+	public void loadAndShow() {
+		loadSettings();
+		setVisible(true);
+	}
+
+	public int getEntranceWidth() {
+		return parseInt(entranceWidth, Constants.DEFAULT_ENTRANCE_WIDTH);
+	}
+
+	public double getMaxEntranceLength() {
+		int lengthMM = parseInt(maxEntranceLength, (int) (1000 * Constants.MAX_ENTRANCE_LENGTH));
+		return (double) lengthMM / 1000;
+	}
+
+	public double getMinEntranceLength() {
+		int lengthMM = parseInt(minEntranceLength, (int) (1000 * Constants.MIN_ENTRANCE_LENGTH));
+		return (double) lengthMM / 1000;
+	}
+
+	public int getMinRoadWidth() {
+		return parseInt(minRoadWidth, Constants.MINIMUM_ROAD_WIDTH);
 	}
 	
 	public int civCount() {
