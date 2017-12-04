@@ -1,3 +1,7 @@
 *.class
 /build/*
 /dist/*
+/bin/
+.classpath
+.project
+.gitignore
