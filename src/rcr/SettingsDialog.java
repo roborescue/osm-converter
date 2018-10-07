@@ -61,7 +61,7 @@ public class SettingsDialog extends JDialog {
 	private JTextField fss = new JTextField("1");
 	private JTextField pos = new JTextField("1");
 	private JTextField fires = new JTextField("6");
-	
+
 	private JTextField entranceWidth = new JTextField(Integer.toString(Constants.DEFAULT_ENTRANCE_WIDTH));
 	private JTextField minEntranceLength = new JTextField(Integer.toString((int) (1000 * Constants.MIN_ENTRANCE_LENGTH)));
 	private JTextField maxEntranceLength = new JTextField(Integer.toString((int) (1000 * Constants.MAX_ENTRANCE_LENGTH)));
@@ -72,10 +72,10 @@ public class SettingsDialog extends JDialog {
 	private JTextField maxH = new JTextField("20");
 
 	private JTextField scale = new JTextField("1.0");
-	
+
 	public SettingsDialog(Frame owner) {
 		super(owner, "Rescue settings");
-		
+
 		setModal(true);
 
         JPanel scenarioSettings = new JPanel(new GridLayout(9, 2));
@@ -98,7 +98,7 @@ public class SettingsDialog extends JDialog {
         scenarioSettings.add(pos);
         scenarioSettings.add(new JLabel("fires"));
         scenarioSettings.add(fires);
-        
+
         JPanel entranceSettings = new JPanel(new GridLayout(3,2));
         entranceSettings.setBorder(BorderFactory.createTitledBorder("Entrances"));
         add(entranceSettings, BorderLayout.NORTH);
@@ -145,7 +145,7 @@ public class SettingsDialog extends JDialog {
 		int res = def;
 		try {
 			res = Integer.parseInt(field.getText());
-		} 
+		}
 		catch (NumberFormatException e) {}
 		return res;
 	}
@@ -173,7 +173,7 @@ public class SettingsDialog extends JDialog {
 	}
 
 	private void loadInt(String subkey, JTextField text, int def) {
-		int value = Main.pref.getInteger(prefix+subkey, def);
+    int value = (int) Main.pref.getDouble(prefix+subkey, def);
 		text.setText(Integer.toString(value));
 	}
 
@@ -184,8 +184,10 @@ public class SettingsDialog extends JDialog {
 
 	private void trySaveInt(String subkey, JTextField text) {
 		try {
-			int value = Integer.parseInt(text.getText());
-			Main.pref.putInteger(prefix+subkey, value);
+      //int value = Integer.parseInt(text.getText());
+      double value = Double.parseDouble( text.getText() );
+      //Main.pref.putInt(prefix+subkey, value);
+      Main.pref.putDouble(prefix+subkey, value);
 		}
 		catch (NumberFormatException e) {
 			// do nothing
@@ -224,7 +226,7 @@ public class SettingsDialog extends JDialog {
 	public int getMinRoadWidth() {
 		return parseInt(minRoadWidth, Constants.MINIMUM_ROAD_WIDTH);
 	}
-	
+
 	public int civCount() {
 		return parseInt(civs, 80);
 	}
@@ -271,7 +273,7 @@ public class SettingsDialog extends JDialog {
 	public double scale() {
 		try {
 			return Double.parseDouble(scale.getText());
-		} 
+		}
 		catch (NumberFormatException e) {
 			return 1.0;
 		}
