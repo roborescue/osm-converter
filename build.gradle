@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+version = '1.0'
+
+dependencies {
+  implementation fileTree( dir: 'lib', include: '**/*.jar' )
+
+  testImplementation 'junit:junit:4.12'
+}
+
+repositories {
+    jcenter()
+}
+
+test {
+  useJUnit()
+}
+
+jar {
+  manifest {
+    attributes( 'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Plugin-Class': 'rcr.RCRPlugin',
+                'Plugin-Description': 'Convert OSM maps to RCR maps',
+                'Plugin-Version': '2.0.1' )
+  }
+}
+
+clean.doFirst {
+  delete file( new File( rootDir, 'dist' ) )
+}
+
+/* Compile */
+task completeBuild(type: Jar) {
+  // Compile the source code
+  from( sourceSets.main.output ) {
+    include '**'
+  }
+  // Merge JAR files
+  fileTree( dir: 'lib' ).include( '*.jar' ).exclude( 'josm*.jar' ).exclude( 'jscience*.jar').each {
+    jarFile ->
+      copy {
+        from zipTree( "lib/${jarFile.name}" )
+        into "$buildDir/classes/java/main"
+      }
+  }
+  destinationDir file( 'dist' )
+  archiveName 'rcr-converter.jar'
+}

@@ -1,8 +1,24 @@
+# Java
 *.class
-/build/*
-/dist/*
-/bin/
-/lib/
-.classpath
-.project
+*.log
+hs_err_pid*
+
+# Git
 .gitignore
+
+# Ignore Gradle project-specific cache directory
+.gradle
+build
+dist
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea
+bin
+
+# Eclipse
+.settings
+.project
+.classpath
