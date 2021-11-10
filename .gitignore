@@ -24,5 +24,8 @@ bin
 # Visual Studio Code
 .vscode
 
+# Theia IDE
+.theia
+
 # Project
 dist

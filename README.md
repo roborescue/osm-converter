@@ -4,7 +4,8 @@
 
 ## 1. Required Software
 
-* Open JDK 1.8+
+* Git
+* OpenJDK Java 17
 * Gradle
 
 ## 2. Compile the project
